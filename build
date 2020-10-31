@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+
+if [[ $1 == "arm" || $1 == "armel" ]]; then
+	ARCH="armel"
+	COMPILER_PREFIX="arm-linux-gnueabi"
+elif [[ $1 == "armhf" ]]; then
+	ARCH="armhf"
+	COMPILER_PREFIX="arm-linux-gnueabihf"
+elif [[ $1 == "arm64" || $1 == "aarch64" ]]; then
+	ARCH="arm64"
+	COMPILER_PREFIX="aarch64-linux-gnu"
+else
+	echo "Invalid arch: $1. (Supported arch: armel/armhf/arm64)"
+	exit
+fi
+
+
+echo "Arch: $ARCH"
+
+#Install tools
+sudo apt-get -y install automake autoconf libtool autotools-dev
+
+#Install build dependencies
+sudo apt-get -y install libudev-dev:armhf libusb-1.0-0-dev:armhf libfox-1.6-dev
+
+./bootstrap
+
+INSTALL_DIR="$HOME/dev/$ARCH/hidapi"
+echo "Install dir: $INSTALL_DIR"
+
+./configure --host=$COMPILER_PREFIX --prefix=$INSTALL_DIR
+make
+make install
+
+
