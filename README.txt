@@ -1,3 +1,5 @@
+# Cross build in ubuntu
+
 ```bash
 ./build <arch>
 ```
